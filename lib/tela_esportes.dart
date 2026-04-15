@@ -1,3 +1,5 @@
+import 'package:app_quadras/cadastro_esporte.dart';
+import 'package:app_quadras/esporte.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -9,6 +11,7 @@ class TelaEsportes extends StatefulWidget {
 }
 
 class _TelaEsportesState extends State<TelaEsportes> {
+  List<Esporte> esportes = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -18,10 +21,20 @@ class _TelaEsportesState extends State<TelaEsportes> {
 
   void consultarEsportes() async {
     final supabase = Supabase.instance.client;
-    final esportes = await supabase
+    final esportesSupabase = await supabase
         .from("esporte") //
         .select();
-    print("esportes: $esportes");
+    print("esportes: $esportesSupabase");
+    setState(() {
+      esportes = esportesSupabase
+          .map(
+            (esporteSupabase) => Esporte(
+              descricao: esporteSupabase['descricao'],
+              numeroJogadores: esporteSupabase['numero_jogadores'],
+            ),
+          )
+          .toList();
+    });
   }
 
   @override
@@ -30,15 +43,32 @@ class _TelaEsportesState extends State<TelaEsportes> {
       appBar: AppBar(
         title: Text("Tela Esportes"),
       ),
+      body: ListView.builder(
+        itemCount: esportes.length,
+        itemBuilder: (context, index) {
+          final esporte = esportes[index];
+          return ListTile(
+            title: Text(esporte.descricao),
+            subtitle: Text("Número de jogadores: ${esporte.numeroJogadores}"),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return TelaEsportes();
-              },
-            ),
-          );
+          Navigator.of(context)
+              .push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return CadastroEsporte();
+                  },
+                ),
+              )
+              .then((value) {
+                if (value != null) {
+                  print("Valor retornado: $value");
+                }
+                consultarEsportes();
+              });
         },
         child: Icon(Icons.add),
       ),
