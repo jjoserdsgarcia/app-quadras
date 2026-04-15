@@ -62,7 +62,7 @@ class _TelaLoginState extends State<TelaLogin> {
                           obscureText = !obscureText;
                         });
                       },
-                      icon: obscureText == true ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+                      icon: obscureText == true ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
                     ),
                   ),
                   validator: (value) {

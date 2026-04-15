@@ -1,4 +1,3 @@
-import 'package:app_quadras/cadastro_usuario.dart';
 import 'package:app_quadras/login.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,8 +7,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
-    url: "https://cmhkcugwpqqkpruzwete.supabase.co",
-    anonKey: "sb_publishable_ox2qFgPXRV9sktnc0-8Oag_s814sEe-",
+    url: "https://suvisriatbmomfzwcvpx.supabase.co",
+    anonKey: "sb_publishable_65bQJFU7ogocxFkfeuUZ2w_GIKeSX3m",
   );
 
   runApp(const MyApp());

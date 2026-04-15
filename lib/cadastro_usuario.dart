@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:app_quadras/utils.dart';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
