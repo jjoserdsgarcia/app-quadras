@@ -47,9 +47,12 @@ class _TelaEsportesState extends State<TelaEsportes> {
         itemCount: esportes.length,
         itemBuilder: (context, index) {
           final esporte = esportes[index];
-          return ListTile(
-            title: Text(esporte.descricao),
-            subtitle: Text("Número de jogadores: ${esporte.numeroJogadores}"),
+          return Card(
+            elevation: 9.0,
+            child: ListTile(
+              title: Text(esporte.descricao),
+              subtitle: Text("Número de jogadores: ${esporte.numeroJogadores}"),
+            ),
           );
         },
       ),
