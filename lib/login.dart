@@ -21,6 +21,10 @@ class _TelaLoginState extends State<TelaLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // SizedBox(
+      //   width: MediaQuery.of(context).size.width,
+      //   height: MediaQuery.of(context).size.height,
+      // )
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(
