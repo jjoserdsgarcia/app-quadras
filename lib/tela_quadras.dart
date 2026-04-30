@@ -29,6 +29,7 @@ class _TelaQuadrasState extends State<TelaQuadras> {
       esportes = esportesSupabase
           .map(
             (esporteSupabase) => Esporte(
+              id: esporteSupabase['id'],
               descricao: esporteSupabase['descricao'],
               numeroJogadores: esporteSupabase['numero_jogadores'],
             ),

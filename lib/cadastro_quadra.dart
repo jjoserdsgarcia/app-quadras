@@ -32,6 +32,7 @@ class _CadastroQuadraState extends State<CadastroQuadra> {
       esportes = esportesSupabase
           .map(
             (esporteSupabase) => Esporte(
+              id: esporteSupabase['id'],
               descricao: esporteSupabase['descricao'],
               numeroJogadores: esporteSupabase['numero_jogadores'],
             ),
@@ -88,17 +89,17 @@ class _CadastroQuadraState extends State<CadastroQuadra> {
             ElevatedButton(
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  final supabase = await Supabase.instance.client;
+                  final supabase = Supabase.instance.client;
                   supabase.from('quadra').insert({
                     'descricao': descricaoController.text,
                   });
 
-                  var registros = await supabase.from('quadra').select().eq('descricao', descricaoController.text);
-                  var idQuadra = registros.first['id'];
+                  List<Map<String, dynamic>> registros = await supabase.from('quadra').select().eq('descricao', descricaoController.text);
+                  int idQuadra = registros.first['id'];
                   for (var esporte in esportesHabilitados.entries.where((element) => element.value)) {
                     supabase.from('quadra_esporte').insert({
                       'quadra_id': idQuadra,
-                      'esporte_id': esporte,
+                      'esporte_id': esporte.key.id,
                     });
                   }
                 }

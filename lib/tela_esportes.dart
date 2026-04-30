@@ -29,6 +29,7 @@ class _TelaEsportesState extends State<TelaEsportes> {
       esportes = esportesSupabase
           .map(
             (esporteSupabase) => Esporte(
+              id: esporteSupabase['id'],
               descricao: esporteSupabase['descricao'],
               numeroJogadores: esporteSupabase['numero_jogadores'],
             ),
@@ -43,7 +44,7 @@ class _TelaEsportesState extends State<TelaEsportes> {
       appBar: AppBar(
         title: Text("Tela Esportes"),
       ),
-      
+
       body: ListView.builder(
         itemCount: esportes.length,
         itemBuilder: (context, index) {
