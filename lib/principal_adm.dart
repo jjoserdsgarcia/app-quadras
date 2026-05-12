@@ -1,5 +1,5 @@
-import 'package:app_quadras/cadastro_quadra.dart';
 import 'package:app_quadras/tela_esportes.dart';
+import 'package:app_quadras/tela_quadras.dart';
 import 'package:flutter/material.dart';
 
 class TelaPrincipalAdm extends StatefulWidget {
@@ -34,8 +34,7 @@ class _TelaPrincipalAdmState extends State<TelaPrincipalAdm> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
-                      // return TelaQuadras();
-                      return CadastroQuadra();
+                      return TelaQuadras();
                     },
                   ),
                 );

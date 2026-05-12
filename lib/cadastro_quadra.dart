@@ -1,9 +1,12 @@
 import 'package:app_quadras/esporte.dart';
+import 'package:app_quadras/quadras.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CadastroQuadra extends StatefulWidget {
-  const CadastroQuadra({super.key});
+  const CadastroQuadra({super.key, this.quadra});
+
+  final Quadra? quadra;
 
   @override
   State<CadastroQuadra> createState() => _CadastroQuadraState();
@@ -11,7 +14,7 @@ class CadastroQuadra extends StatefulWidget {
 
 class _CadastroQuadraState extends State<CadastroQuadra> {
   List<Esporte> esportes = [];
-  TextEditingController descricaoController = TextEditingController();
+  late TextEditingController descricaoController;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   Map<Esporte, bool> esportesHabilitados = {};
 
@@ -19,6 +22,15 @@ class _CadastroQuadraState extends State<CadastroQuadra> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    descricaoController = TextEditingController();
+    if (widget.quadra != null) {
+      descricaoController = TextEditingController(text: widget.quadra!.descricao);
+      esportesHabilitados = {};
+      for (var esporte in widget.quadra!.esportesHabilitados) {
+        esportesHabilitados[esporte] = true;
+      }
+    }
+    descricaoController = TextEditingController();
     consultarEsportes();
   }
 
@@ -42,6 +54,14 @@ class _CadastroQuadraState extends State<CadastroQuadra> {
     esportesHabilitados.clear();
     for (var esp in esportes) {
       esportesHabilitados[esp] = false;
+    }
+    if (widget.quadra != null) {
+      for (var esp in esportesHabilitados.entries) {
+        if (widget.quadra!.esportesHabilitados.contains(esp.key)) {
+          esportesHabilitados[esp.key] = true;
+        }
+      }
+      setState(() {});
     }
   }
 
@@ -88,20 +108,35 @@ class _CadastroQuadraState extends State<CadastroQuadra> {
             }),
             ElevatedButton(
               onPressed: () async {
-                if (formKey.currentState!.validate()) {
-                  final supabase = Supabase.instance.client;
-                  supabase.from('quadra').insert({
-                    'descricao': descricaoController.text,
-                  });
-
-                  List<Map<String, dynamic>> registros = await supabase.from('quadra').select().eq('descricao', descricaoController.text);
-                  int idQuadra = registros.first['id'];
-                  for (var esporte in esportesHabilitados.entries.where((element) => element.value)) {
-                    supabase.from('quadra_esporte').insert({
-                      'quadra_id': idQuadra,
-                      'esporte_id': esporte.key.id,
+                try {
+                  if (formKey.currentState!.validate()) {
+                    final supabase = Supabase.instance.client;
+                    await supabase.from('quadra').insert({
+                      'descricao': descricaoController.text,
                     });
+
+                    List<Map<String, dynamic>> registros = await supabase.from('quadra').select().eq('descricao', descricaoController.text);
+                    int idQuadra = registros.first['id'];
+                    for (var esporte in esportesHabilitados.entries.where((element) => element.value)) {
+                      await supabase.from('quadra_esporte').insert({
+                        'quadra_id': idQuadra,
+                        'esporte_id': esporte.key.id,
+                      });
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Quadra cadastrada com sucesso!"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
                   }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Erro ao cadastrar quadra: $e"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                 }
               },
               child: Text("Salvar"),
